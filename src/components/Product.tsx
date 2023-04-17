@@ -1,9 +1,7 @@
 import React, {FC, useEffect, useState} from 'react'
 import styled from 'styled-components'
-import { AiOutlineHeart, AiFillStar } from "react-icons/ai";
+import { AiOutlineHeart, AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { BiDollar } from "react-icons/bi";
-import { BsStar } from 'react-icons/bs';
-import sanGold from '../assets/assets__default_upload_bucket.png'
 import { useAddToCartMutation } from '../services/api/cart';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProductToCart, removeProductFromCart } from '../features/cartSlice';
@@ -18,6 +16,19 @@ interface ProductProps {
     note: number
 };
 const Product: FC<ProductProps> = ({id, name, price, image, details, note}) => {
+    function renderStars() {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+          stars.push(
+            i <= note ? (
+              <AiFillStar key={i} size={17} style={{ fill: '#11A010' }} />
+            ) : (
+              <AiOutlineStar key={i} size={17} style={{ fill: '#000000' }} />
+            )
+          );
+        }
+        return stars;
+      }
     const [isAddedToCart, setisAddedToCart] = useState(false);
     const shoppingCartItems = useSelector((state: RootState) => state.cartItems.products);
     useEffect(() => {
@@ -95,13 +106,9 @@ const Product: FC<ProductProps> = ({id, name, price, image, details, note}) => {
             <span><sup><BiDollar/></sup>{price}<sup style={{fontSize: '10px'}}>.00</sup></span>
         </StyledTitle>
         <StyledTitle color='t'>{details}</StyledTitle>
-        <div style={{display:'flex', alignItems:'center'}}>
-            <AiFillStar size={17}  style={{ fill: '#11A010' }}/>
-            <AiFillStar size={17}  style={{ fill: '#11A010' }}/>
-            <AiFillStar size={17}  style={{ fill: '#11A010' }}/>
-            <AiFillStar size={17}  style={{ fill: '#11A010' }}/>
-            <AiFillStar size={17}  style={{ fill: '#11A010' }}/>
-            <StyledTitle>(121)</StyledTitle>
+        <div style={{ display: "flex", alignItems: "center" }}>
+            {renderStars()}
+            <StyledTitle>({121})</StyledTitle>
         </div>
         <StyledButton onClick={handleCart}> {isAddedToCart ? 'Remove from cart' : 'Add to Cart'}</StyledButton>
     </Container>
