@@ -21,9 +21,12 @@ export default function ShoppingCartItems() {
         <h3>Review item and Shipping</h3>
         <StyledCartItems>
             {shoppingCartItems.length > 0 ? 
-                shoppingCartItems.map((produit) => (<ShoppingCartItem key={produit.id} id={produit.id} name={produit.name} price={produit.price} image={produit.image} details={produit.details} note={produit.note} />))
+                shoppingCartItems.map((produit) => (<ShoppingCartItem key={produit.id} id={produit.id} name={produit.name} price={produit.price} image={produit.image} details={produit.details} quantity={produit.quantity} note={produit.note} />))
             :
-                'Your cart is currently empty'
+                <div style={{display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', margin:'30px'}}>
+                    <img src={require('../assets/box.png')} style={{width:'200px', height:'200px'}}/>
+                    Your cart is currently empty
+                </div>
             }    
             
         </StyledCartItems>

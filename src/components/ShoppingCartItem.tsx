@@ -6,7 +6,7 @@ import { BiDollar } from 'react-icons/bi';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
-import { removeProductFromCart } from '../features/cartSlice';
+import { addQTY, removeProductFromCart, removeQTY } from '../features/cartSlice';
 import { MdClose } from "react-icons/md";
 
  interface ShoppingCartItemProps {
@@ -15,13 +15,20 @@ import { MdClose } from "react-icons/md";
     price: number,
     image: string,
     details: string,
-    note: number
+    note: number,
+    quantity:number
 };
-const ShoppingCartItem: FC<ShoppingCartItemProps> = ({id, name, price, image, details, note}) => {
+const ShoppingCartItem: FC<ShoppingCartItemProps> = ({id, name, price, image, details, note, quantity}) => {
     const dispatch = useDispatch();
     const handleDelete = () => {
         dispatch(removeProductFromCart(id));
       };
+    const handleAddQty = () => {
+        dispatch(addQTY(id));
+      };
+    const handleremoveQty = () => {
+        dispatch(removeQTY(id));
+    };
   return (
     <Container>
         <Image src={image}  />
@@ -33,9 +40,11 @@ const ShoppingCartItem: FC<ShoppingCartItemProps> = ({id, name, price, image, de
             <span>
                 <sup><BiDollar/></sup>{price}<sup style={{fontSize: '10px'}}>.00</sup>
             </span>
-            <span style={{marginBottom:'10px', marginTop:'5px'}}>
-                QTY : 1 
-            </span>
+            <StyledQtyButton>
+                <Button onClick={handleremoveQty}>-</Button>
+                 {quantity}
+                 <Button onClick={handleAddQty}>+</Button>
+            </StyledQtyButton>
             <StyledButton title='Supprimer'  onClick={handleDelete}><MdClose/></StyledButton>
         </StyledPrice>
     </Container>
@@ -70,6 +79,23 @@ const StyledButton = styled.button`
     justify-content: center;
     align-items: center;
    cursor: pointer;
+`;
+const Button = styled.button`
+    background-color: white;
+    color: black;
+    border: none;
+    font-size: 20px;
+`;
+const StyledQtyButton = styled.span`
+    margin-bottom:10px;
+    margin-top:10px;
+    border: 1px solid black;
+    width: 100%;
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
 `;
 const StyledTitle = styled.span`
     width: 100%;
