@@ -6,18 +6,20 @@ import Accueil from './pages/Accueil';
 import styled from 'styled-components';
 import HeaderInfo from './components/HeaderInfo';
 import Navbar from './components/Navbar';
+import Cart from './pages/cart';
 
 function App() {
   return (
-    <Container className="App">
-      <HeaderInfo/>
-      <Navbar/>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Accueil/>}/>
-        </Routes>
-      </BrowserRouter>
-    </Container>
+    <BrowserRouter>
+      <Container className="App">
+        <HeaderInfo/>
+        <Navbar/>
+          <Routes>
+            <Route path="/" element={<Accueil/>}/>
+            <Route path="/cart" element={<Cart/>}/>
+          </Routes>
+      </Container>
+    </BrowserRouter>
   );
 }
 

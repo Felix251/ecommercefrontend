@@ -6,7 +6,9 @@ import DiscountBox from '../../components/DiscountBox';
 import Filters from '../../components/Filters';
 import Product from '../../components/Product';
 import sanGold from '../../assets/assets__default_upload_bucket.png'
+import { useGetProductsQuery } from '../../services/api/products';
 function Accueil() {
+    const { data = [], isLoading} = useGetProductsQuery();
   return (
     <Container>
         <DiscountBox/>
@@ -14,12 +16,15 @@ function Accueil() {
         <StyledHeadphones>
             <h1>Headphones For You!</h1>
             <Contenaire>
-                <Product name='Wireless Earbuds, IPX8' note={5} price={89} image={sanGold} details='A perfect balance of high-fidelity audio' isAddedToCart={false}/>
-                <Product name='Wireless Earbuds, IPX8' note={5} price={89} image={sanGold} details='A perfect balance of high-fidelity audio' isAddedToCart={true}/>
-                <Product name='Wireless Earbuds, IPX8' note={5} price={89} image={sanGold} details='A perfect balance of high-fidelity audio' isAddedToCart={false}/>
-                <Product name='Wireless Earbuds, IPX8' note={5} price={89} image={sanGold} details='A perfect balance of high-fidelity audio' isAddedToCart={false}/>
-                <Product name='Wireless Earbuds, IPX8' note={5} price={89} image={sanGold} details='A perfect balance of high-fidelity audio' isAddedToCart={false}/>
-            </Contenaire>
+                {
+                    isLoading?     
+                    'Loading...'
+                    :
+                    <>
+                        {data.map((produit) => (<Product id={produit.id}  name={produit.name} note={produit.note} price={produit.price} image={produit.image} details={produit.details} />))}
+                    </>
+                }
+           </Contenaire>
         </StyledHeadphones>
     </Container>
   )

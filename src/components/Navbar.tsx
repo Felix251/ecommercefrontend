@@ -1,8 +1,12 @@
 import React, {useState} from 'react'
 import { FiChevronDown, FiSearch, FiShoppingCart, FiUser } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { RootState } from '../store/store';
 
 export default function Navbar() {
+  const numberOfCartItems = useSelector((state: RootState) => state.cartItems.nextId);
     const [text, setText] = useState("");
   const handleChange = (event: any) => {
     setText(event.target.value);
@@ -13,8 +17,9 @@ export default function Navbar() {
 
   return (
     <Container>
-        <Titre>ShopCart</Titre>
-       
+       <Link to='/' style={{textDecoration:'none', color:'black'}}>
+         <Titre>ShopCart</Titre>
+         </Link>
       <Contenaire>
         
             <span style={{display:'flex', alignItems:'center'}}>Categories <FiChevronDown/></span>
@@ -27,18 +32,17 @@ export default function Navbar() {
         value={text}
         onChange={handleChange}
         placeholder="Search"
-        onSubmit={e => {
-            e.preventDefault();
-        }}
         />
          <Icon />
         </StyledInput>
         <div>
             <FiUser/> Account
         </div>
-        <div>
-            <FiShoppingCart/>  Cart
-        </div>
+        <Link to='/cart' style={{textDecoration:'none', color:'black', position: 'relative'}}>
+            <FiShoppingCart/>
+            <span>Cart</span>
+            <NumberOfCartItem>{numberOfCartItems -1}</NumberOfCartItem>  
+        </Link>
       </Contenaire>
     </Container>
   )
@@ -51,6 +55,9 @@ const Container = styled.div`
     justify-content: center ;
     font-size: 13px;
     align-items: center;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
 `;
 const Contenaire = styled.div`
     width: 70%;
@@ -98,4 +105,19 @@ const Icon = styled.button`
   cursor: pointer;
   opacity: 0.7;
 `;
-
+const NumberOfCartItem = styled.span`
+  position: absolute;
+  background-color: red;
+  color: white;
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
+  z-index: 100;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -15px;
+  right: -15px;
+  padding: 3px;
+`;

@@ -1,22 +1,38 @@
-import React, {FC} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import styled from 'styled-components'
 import { AiOutlineHeart, AiFillStar } from "react-icons/ai";
 import { BiDollar } from "react-icons/bi";
 import { BsStar } from 'react-icons/bs';
+import sanGold from '../assets/assets__default_upload_bucket.png'
+import { useAddToCartMutation } from '../services/api/cart';
+import { useDispatch, useSelector } from 'react-redux';
+import { addProductToCart, removeProductFromCart } from '../features/cartSlice';
+import { RootState } from '../store/store';
 
 interface ProductProps {
+    id: string
     name: string,
     price: number,
-    image: any,
+    image: string,
     details: string,
     note: number
-    isAddedToCart: boolean
-}
-const Product: FC<ProductProps> = ({name, price, image, details, note, isAddedToCart}) => {
+};
+const Product: FC<ProductProps> = ({id, name, price, image, details, note}) => {
+    const [isAddedToCart, setisAddedToCart] = useState(false);
+    const shoppingCartItems = useSelector((state: RootState) => state.cartItems.products);
+    useEffect(() => {
+       
+        if (shoppingCartItems.find((produit) => produit.id == id)) {
+            setisAddedToCart(true)
+        } else {
+            setisAddedToCart(false)
+        }
+    })
+    
     const StyledButton =styled.button`
     margin-top: 2px;
     padding: 8px 10px;
-    width: 50%;
+    width: 60%;
     border-radius: 30px;
     border: 1px solid black;
     cursor: pointer;
@@ -30,6 +46,44 @@ const Product: FC<ProductProps> = ({name, price, image, details, note, isAddedTo
         background-color: #fff
    `}
     `;
+    const [update, { isLoading: isLoadingMutation }] = useAddToCartMutation();
+    const dispatch = useDispatch()
+    const addToCart = () => {
+        // const updatedProduct = {
+        //     id: id,
+        //     name: name,
+        //     price: price,
+        //     image: image,
+        //     details: details,
+        //     note: note,
+        //     isAddedToCart: !isAddedToCart
+        //   };
+      
+        //   update(updatedProduct)
+        //     .unwrap()
+        //     .then(() => {})
+        //     .catch(() => {});
+
+        dispatch(addProductToCart({
+                id: id,
+                name: name,
+                price: price,
+                image: image,
+                details: details,
+                note: note,
+                quantity: 1
+              }));
+    }
+    const handleDelete = () => {
+        dispatch(removeProductFromCart(id));
+      };
+      const handleCart = () => {
+        if (isAddedToCart) {
+            handleDelete()
+        } else {
+            addToCart()
+        }
+      }
   return (
     <Container>
         <ProductBox>
@@ -49,7 +103,7 @@ const Product: FC<ProductProps> = ({name, price, image, details, note, isAddedTo
             <AiFillStar size={17}  style={{ fill: '#11A010' }}/>
             <StyledTitle>(121)</StyledTitle>
         </div>
-        <StyledButton>Add to Cart</StyledButton>
+        <StyledButton onClick={handleCart}> {isAddedToCart ? 'Remove from cart' : 'Add to Cart'}</StyledButton>
     </Container>
   )
 }
